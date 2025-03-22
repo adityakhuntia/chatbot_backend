@@ -99,12 +99,11 @@ async def chatbot(request: QueryRequest):
             "center_id: Identifier for the center associated with the programme, "
             "created_at: Timestamp when the programme record was created."
         )
-        try:
-            response = agent.invoke(user_query)
-            output = response.get('output', "No response")
-        except Exception as e:
-            output = f"Error processing request: {str(e)}"
-        return {"response": output}
+        response = agent.invoke(user_query)
+        output = response.get('output', "No response")
+    except Exception as e:
+        output = f"Error processing request: {str(e)}"
+    return {"response": output}
 
 if __name__ == "__main__":
     import os
