@@ -17,8 +17,9 @@ COHERE_API_KEY = os.getenv("COHERE_API_KEY", "8ueWFEgswEV04DUHCsnpIiFqYDeD35e4BP
 SUPABASE_PASSWORD = os.getenv("SUPABASE_PASSWORD", "Ishanya@Team2")
 
 # Initialize database connection
+DB_HOST = SUPABASE_URL.replace("https://", "db.")  # Adjusting the host format
 db = SQLDatabase.from_uri(
-    f"postgresql://postgres:{quote(str(SUPABASE_PASSWORD), safe='')}@db.{SUPABASE_URL.split('//')[-1]}:5432/postgres"
+    f"postgresql://postgres:{quote(SUPABASE_PASSWORD, safe='')}@{DB_HOST}:5432/postgres"
 )
 
 db_chain = SQLDatabaseChain.from_llm(
@@ -55,7 +56,7 @@ class QueryRequest(BaseModel):
     user_query: str
 
 @app.post("/chatbot")
-def chatbot(request: QueryRequest):
+async def chatbot(request: QueryRequest):
     try:
         user_query = request.user_query + (
             "The following is the schema of the Students table: "
@@ -98,10 +99,12 @@ def chatbot(request: QueryRequest):
             "center_id: Identifier for the center associated with the programme, "
             "created_at: Timestamp when the programme record was created."
         )
-        response = agent.invoke(user_query)
-        return {"response": response.get('output', "No response")}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        try:
+            response = agent.invoke(user_query)
+            output = response.get('output', "No response")
+        except Exception as e:
+            output = f"Error processing request: {str(e)}"
+        return {"response": output}
 
 if __name__ == "__main__":
     import os
