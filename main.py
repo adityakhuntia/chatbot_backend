@@ -11,10 +11,11 @@ import os
 app = FastAPI()
 
 # Environment variables
-SUPABASE_URL = os.getenv("SUPABASE_URL", "https://otddqddkjuqcntbnmdkt.supabase.co")
+SUPABASE_URL = os.getenv("SUPABASE_URL", "https://nizvcdssajfpjtncbojx.supabase.co")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5penZjZHNzYWpmcGp0bmNib2p4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI2MTU0ODksImV4cCI6MjA1ODE5MTQ4OX0.5b2Yzfzzzz-C8S6iqhG3SinKszlgjdd4NUxogWIxCLc")
 COHERE_API_KEY = os.getenv("COHERE_API_KEY", "8ueWFEgswEV04DUHCsnpIiFqYDeD35e4BPs8sepl")
-SUPABASE_PASSWORD = os.getenv("SUPABASE_PASSWORD", "Ishanya@Team2")
+SUPABASE_PASSWORD = os.getenv("SUPABASE_PASSWORD", "SupaBase@Ishanya@Team_2
+")
 
 # Initialize database connection
 DB_HOST = SUPABASE_URL.replace("https://", "db.")  # Adjusting the host format
