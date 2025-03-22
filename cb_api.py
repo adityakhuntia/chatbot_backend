@@ -11,10 +11,10 @@ import os
 app = FastAPI()
 
 # Environment variables
-SUPABASE_URL = "https://otddqddkjuqcntbnmdkt.supabase.co"
-SUPABASE_KEY = "zeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-COHERE_API_KEY = "8ueWFEgswEV04DUHCsnpIiFqYDeD35e4BPs8sepl"
-SUPABASE_PASSWORD = "Ishanya@Team2"
+SUPABASE_URL = os.getenv("SUPABASE_URL", "https://otddqddkjuqcntbnmdkt.supabase.co")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY", "zeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+COHERE_API_KEY = os.getenv("COHERE_API_KEY", "8ueWFEgswEV04DUHCsnpIiFqYDeD35e4BPs8sepl")
+SUPABASE_PASSWORD = os.getenv("SUPABASE_PASSWORD", "Ishanya@Team2")
 
 # Initialize database connection
 db = SQLDatabase.from_uri(
@@ -58,50 +58,52 @@ class QueryRequest(BaseModel):
 def chatbot(request: QueryRequest):
     try:
         user_query = request.user_query + (
-        "The following is the schema of the Students table: "
-        "STUDENT_id: Unique identifier for the student. "
-        "first_name: First name of the student. "
-        "last_name: Last name of the student. "
-        "photo: Profile picture or avatar of the student. "
-        "gender: Gender of the student. "
-        "dob: Date of birth of the student. "
-        "primary_diagnosis: Primary medical or educational diagnosis. "
-        "comorbidity: Any additional medical conditions. "
-        "udid: Unique Disability ID (if applicable). "
-        "enrollment_year: Year the student was enrolled. "
-        "status: Current enrollment status (active, graduated, etc.). "
-        "student_email: Email address of the student. "
-        "program_id: Primary program the student is enrolled in. --> Foreign Key to Programme Table" 
-        "program_2_id: Secondary program (if any). --> Foreign Key to Programme Table"
-        "number_of_sessions: Total sessions attended or scheduled. "
-        "timings: Preferred or scheduled session timings. "
-        "days_of_week: Days of the week the student attends sessions. "
-        "educator_id: Primary educator assigned to the student. "
-        "secondary_educator_id: Secondary educator (if any). "
-        "session_type: Type of session (e.g., individual, group, online). "
-        "blood_group: Student's blood group. "
-        "allergies: Known allergies, if any. "
-        "contact_number: Primary contact number. "
-        "alt_contact_number: Alternate contact number. "
-        "address: Residential address of the student. "
-        "transport: Transportation details or requirements. "
-        "strengths: Notable strengths of the student. "
-        "weakness: Areas where the student may need additional support. "
-        "comments: Additional notes or remarks. "
-        "created_at: Timestamp when the record was created. "
-        "center_id: Identifier for the center the student is associated with."
-        
-        
-        "The following is the schema of the programs table: "
-        
-        "id: Unique identifier for the programme, "
-        "name: Name of the programme, "
-        "num_of_student: Number of students enrolled in the programme, "
-        "num_of_educator: Number of educators assigned to the programme, "
-        "center_id: Identifier for the center associated with the programme, "
-        "created_at: Timestamp when the programme record was created."
+            "The following is the schema of the Students table: "
+            "STUDENT_id: Unique identifier for the student. "
+            "first_name: First name of the student. "
+            "last_name: Last name of the student. "
+            "photo: Profile picture or avatar of the student. "
+            "gender: Gender of the student. "
+            "dob: Date of birth of the student. "
+            "primary_diagnosis: Primary medical or educational diagnosis. "
+            "comorbidity: Any additional medical conditions. "
+            "udid: Unique Disability ID (if applicable). "
+            "enrollment_year: Year the student was enrolled. "
+            "status: Current enrollment status (active, graduated, etc.). "
+            "student_email: Email address of the student. "
+            "program_id: Primary program the student is enrolled in. --> Foreign Key to Programme Table" 
+            "program_2_id: Secondary program (if any). --> Foreign Key to Programme Table"
+            "number_of_sessions: Total sessions attended or scheduled. "
+            "timings: Preferred or scheduled session timings. "
+            "days_of_week: Days of the week the student attends sessions. "
+            "educator_id: Primary educator assigned to the student. "
+            "secondary_educator_id: Secondary educator (if any). "
+            "session_type: Type of session (e.g., individual, group, online). "
+            "blood_group: Student's blood group. "
+            "allergies: Known allergies, if any. "
+            "contact_number: Primary contact number. "
+            "alt_contact_number: Alternate contact number. "
+            "address: Residential address of the student. "
+            "transport: Transportation details or requirements. "
+            "strengths: Notable strengths of the student. "
+            "weakness: Areas where the student may need additional support. "
+            "comments: Additional notes or remarks. "
+            "created_at: Timestamp when the record was created. "
+            "center_id: Identifier for the center the student is associated with."
+            "The following is the schema of the programs table: "
+            "id: Unique identifier for the programme, "
+            "name: Name of the programme, "
+            "num_of_student: Number of students enrolled in the programme, "
+            "num_of_educator: Number of educators assigned to the programme, "
+            "center_id: Identifier for the center associated with the programme, "
+            "created_at: Timestamp when the programme record was created."
         )
         response = agent.invoke(user_query)
         return {"response": response.get('output', "No response")}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", 8000))  # Use Render's provided PORT or default to 8000
+    uvicorn.run(app, host="0.0.0.0", port=port)
