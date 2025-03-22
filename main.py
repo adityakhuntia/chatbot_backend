@@ -104,6 +104,7 @@ def chatbot(request: QueryRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
+    import os
     import uvicorn
-    port = int(os.getenv("PORT", 8000))  # Use Render's provided PORT or default to 8000
+    port = int(os.environ.get("PORT", 8000))  # Default to 8000 if PORT is not set
     uvicorn.run(app, host="0.0.0.0", port=port)
